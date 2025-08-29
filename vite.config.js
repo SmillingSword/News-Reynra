@@ -18,4 +18,22 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        // Optimasi untuk mengurangi penggunaan memory
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    // Memisahkan chunk untuk mengurangi beban memory
+                    vendor: ['vue', 'vue-router', 'axios'],
+                    charts: ['chart.js'],
+                    editor: ['@tinymce/tinymce-vue'],
+                }
+            }
+        }
+    },
+    // Optimasi untuk development
+    optimizeDeps: {
+        include: ['vue', 'vue-router', 'axios']
+    }
 });
