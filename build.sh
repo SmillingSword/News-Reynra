@@ -5,10 +5,10 @@
 
 echo "=== Building News-Reynra Application ==="
 
-# Set memory limit untuk Node.js (disesuaikan dengan kapasitas server)
-export NODE_OPTIONS="--max-old-space-size=4096"
+# Set memory limit untuk Node.js (ditingkatkan menjadi 8GB)
+export NODE_OPTIONS="--max-old-space-size=8192"
 
-echo "Memory limit set to 4GB"
+echo "Memory limit set to 8GB"
 
 # Clean cache sebelumnya untuk menghindari masalah
 echo "Cleaning previous cache..."

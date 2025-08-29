@@ -33,14 +33,21 @@ Jika server memiliki RAM terbatas, tambahkan swap memory:
 # Cek swap yang tersedia
 free -h
 
-# Buat swap file (contoh: 2GB)
-sudo fallocate -l 2G /swapfile
+# Buat swap file (contoh: 4GB - disesuaikan dengan kebutuhan)
+sudo fallocate -l 4G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 
+# Atur swappiness untuk optimasi (opsional)
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
 # Jadikan permanen
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# Verifikasi swap
+free -h
 ```
 
 ### 4. Build Bertahap (Jika Masih Bermasalah)
