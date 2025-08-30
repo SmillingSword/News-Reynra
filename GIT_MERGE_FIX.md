@@ -1,6 +1,8 @@
 # 🔧 Git Merge Conflict Resolution
 
-## 🚨 **Problem:**
+## 🚨 **Problems:**
+
+### Problem 1: Local Changes Conflict
 ```
 error: Your local changes to the following files would be overwritten by merge:
         app/Console/Commands/AutoContentCreatorCommand.php
@@ -8,7 +10,35 @@ error: Your local changes to the following files would be overwritten by merge:
 Please commit your changes or stash them before you merge.
 ```
 
-## ✅ **Solution Steps:**
+### Problem 2: Vim Swap File (NEW!)
+```
+E325: ATTENTION
+Found a swap file by the name "~/news.reynrastore.com/News-Reynra/.git/.MERGE_MSG.swp"
+```
+
+## ✅ **Complete Solution Steps:**
+
+### Step 0: Fix Vim Swap File Issue (FIRST!)
+```bash
+# Remove the problematic swap file
+rm ~/.git/.MERGE_MSG.swp
+
+# Or if that doesn't work, try:
+rm ~/news.reynrastore.com/News-Reynra/.git/.MERGE_MSG.swp
+
+# Kill any running vim processes
+pkill vim
+
+# Check if any git processes are stuck
+ps aux | grep git
+
+### Step 1: Commit Local Changes
+=======
+# Kill any stuck git processes if found
+```
+
+### Step 1: Commit Local Changes
+=======
 
 ### Step 1: Commit Local Changes
 ```bash

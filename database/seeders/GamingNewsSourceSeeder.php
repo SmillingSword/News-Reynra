@@ -251,13 +251,20 @@ class GamingNewsSourceSeeder extends Seeder
         ];
 
         foreach ($gamingSources as $sourceData) {
-            // Add default values for required fields
-            $sourceData['is_active'] = true;
-            $sourceData['next_scrape_at'] = now();
+            // Only use fields that exist in the base migration
+            $basicData = [
+                'name' => $sourceData['name'],
+                'url' => $sourceData['url'],
+                'description' => $sourceData['description'],
+                'trust_score' => $sourceData['trust_score'],
+                'type' => $sourceData['type'],
+                'is_active' => true,
+                'slug' => \Illuminate\Support\Str::slug($sourceData['name']),
+            ];
             
             NewsSource::updateOrCreate(
                 ['url' => $sourceData['url']],
-                $sourceData
+                $basicData
             );
         }
 

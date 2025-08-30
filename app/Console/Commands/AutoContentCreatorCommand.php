@@ -771,7 +771,7 @@ class AutoContentCreatorCommand extends Command
         // Generate fallback content when scraping fails
         $fallbackArticles = [];
         
-        // Gaming trending topics for fallback content
+        // Gaming trending topics for fallback content with default images
         $trendingTopics = [
             'Mobile Legends' => [
                 'Mobile Legends Season Terbaru Hadirkan Hero Baru dengan Skill Ultimate yang Menakjubkan',
@@ -810,6 +810,35 @@ class AutoContentCreatorCommand extends Command
             ]
         ];
         
+        // Default gaming images for fallback content
+        $defaultImages = [
+            'Mobile Legends' => [
+                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=center'
+            ],
+            'PUBG Mobile' => [
+                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=center'
+            ],
+            'Valorant' => [
+                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=center'
+            ],
+            'Genshin Impact' => [
+                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=center'
+            ],
+            'Esports Indonesia' => [
+                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=600&fit=crop&crop=center',
+                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=600&fit=crop&crop=center'
+            ]
+        ];
+        
         // Select random topics based on source
         $sourceTopics = [];
         if (str_contains(strtolower($source->name), 'oneesport') || str_contains(strtolower($source->name), 'esports')) {
@@ -831,12 +860,15 @@ class AutoContentCreatorCommand extends Command
             // Generate content based on topic
             $content = $this->generateTopicContent($topic, $source->name);
             
+            // Select appropriate default image based on topic
+            $defaultImage = $this->getDefaultImageForTopic($topic, $defaultImages);
+            
             $fallbackArticles[] = [
                 'title' => $topic,
                 'url' => $source->url . '#fallback-' . Str::slug($topic),
                 'content' => $content,
                 'excerpt' => Str::limit(strip_tags($content), 200),
-                'featured_image' => null,
+                'featured_image' => $defaultImage,
                 'source' => $source->name
             ];
         }
@@ -940,5 +972,27 @@ class AutoContentCreatorCommand extends Command
         $content .= "<p><strong>Stay gaming, stay awesome! 🎮🔥</strong></p>";
         
         return $content;
+    }
+    
+    private function getDefaultImageForTopic($topic, $defaultImages)
+    {
+        // Determine which game category the topic belongs to and return appropriate image
+        $topicLower = strtolower($topic);
+        
+        if (str_contains($topicLower, 'mobile legends')) {
+            return $defaultImages['Mobile Legends'][array_rand($defaultImages['Mobile Legends'])];
+        } elseif (str_contains($topicLower, 'pubg')) {
+            return $defaultImages['PUBG Mobile'][array_rand($defaultImages['PUBG Mobile'])];
+        } elseif (str_contains($topicLower, 'valorant')) {
+            return $defaultImages['Valorant'][array_rand($defaultImages['Valorant'])];
+        } elseif (str_contains($topicLower, 'genshin')) {
+            return $defaultImages['Genshin Impact'][array_rand($defaultImages['Genshin Impact'])];
+        } elseif (str_contains($topicLower, 'esports') || str_contains($topicLower, 'tournament') || str_contains($topicLower, 'championship')) {
+            return $defaultImages['Esports Indonesia'][array_rand($defaultImages['Esports Indonesia'])];
+        } else {
+            // For generic gaming topics, pick random from any category
+            $allImages = array_merge(...array_values($defaultImages));
+            return $allImages[array_rand($allImages)];
+        }
     }
 }
