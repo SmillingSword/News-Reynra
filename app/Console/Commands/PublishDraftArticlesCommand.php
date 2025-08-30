@@ -2,55 +2,86 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Article;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use App\Models\Article;
+use Carbon\Carbon;
 
 class PublishDraftArticlesCommand extends Command
 {
-    protected $signature = 'articles:publish-drafts {--confirm : Skip confirmation prompt}';
-    protected $description = 'Publish all draft articles that are ready for publication';
+    protected $signature = 'articles:publish-drafts {--limit=50 : Maximum number of drafts to publish}';
+    protected $description = 'Publish draft articles that are ready for publication';
 
-    public function handle(): int
+    public function handle()
     {
-        $draftArticles = Article::where('status', 'draft')->get();
-
+        $limit = $this->option('limit');
+        
+        $this->info("📝 Publishing draft articles (limit: {$limit})...");
+        
+        // Find draft articles that are ready to be published
+        $draftArticles = Article::where('status', 'draft')
+            ->where('created_at', '<=', Carbon::now()->subMinutes(5)) // Wait 5 minutes before publishing
+            ->whereNotNull('title')
+            ->whereNotNull('content')
+            ->where('title', '!=', '')
+            ->where('content', '!=', '')
+            ->limit($limit)
+            ->get();
+        
         if ($draftArticles->isEmpty()) {
-            $this->info('📝 No draft articles found.');
-            return self::SUCCESS;
+            $this->info('✅ No draft articles found to publish.');
+            return 0;
         }
-
-        $this->info("📋 Found {$draftArticles->count()} draft articles:");
+        
+        $publishedCount = 0;
+        $errorCount = 0;
         
         foreach ($draftArticles as $article) {
-            $this->line("  • {$article->title}");
-        }
-
-        if (!$this->option('confirm')) {
-            if (!$this->confirm('Do you want to publish all these draft articles?')) {
-                $this->info('❌ Operation cancelled.');
-                return self::SUCCESS;
-            }
-        }
-
-        $publishedCount = 0;
-        foreach ($draftArticles as $article) {
             try {
+                // Validate article has minimum required content
+                if (strlen(strip_tags($article->content)) < 100) {
+                    $this->warn("⚠️  Skipping article '{$article->title}' - content too short");
+                    continue;
+                }
+                
+                // Update status to published
                 $article->update([
                     'status' => 'published',
-                    'published_at' => now(),
+                    'published_at' => Carbon::now()
                 ]);
                 
-                $this->line("✅ Published: {$article->title}");
                 $publishedCount++;
+                $this->line("✅ Published: {$article->title}");
+                
             } catch (\Exception $e) {
-                $this->error("❌ Failed to publish: {$article->title} - " . $e->getMessage());
+                $errorCount++;
+                $this->error("❌ Failed to publish '{$article->title}': {$e->getMessage()}");
+                
+                Log::error('Failed to publish draft article', [
+                    'article_id' => $article->id,
+                    'title' => $article->title,
+                    'error' => $e->getMessage()
+                ]);
             }
         }
-
-        $this->newLine();
-        $this->info("🎉 Successfully published {$publishedCount} articles!");
-        $this->line("🌐 Articles are now visible on your website.");
-
-        return self::SUCCESS;
+        
+        // Summary
+        $this->info("📊 Publishing Summary:");
+        $this->line("   ✅ Published: {$publishedCount} articles");
+        
+        if ($errorCount > 0) {
+            $this->line("   ❌ Errors: {$errorCount} articles");
+        }
+        
+        // Log summary
+        Log::info('Draft Articles Published', [
+            'published_count' => $publishedCount,
+            'error_count' => $errorCount,
+            'total_processed' => $draftArticles->count()
+        ]);
+        
+        $this->info('✅ Draft publishing completed!');
+        
+        return 0;
     }
 }

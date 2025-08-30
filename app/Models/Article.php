@@ -26,6 +26,7 @@ class Article extends Model implements HasMedia
         'excerpt',
         'content',
         'author_id',
+        'news_source_id',
         'editor_id',
         'type',
         'status',

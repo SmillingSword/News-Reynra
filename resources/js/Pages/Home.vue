@@ -156,7 +156,7 @@
             :class="`delay-${(index + 1) * 100}`"
           >
             <Link :href="route('articles.show', article.slug)">
-              <div class="relative overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-700 aspect-video mb-3 shadow-lg">
+              <div class="relative overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-700 aspect-video mb-3 shadow-gaming group-hover:shadow-gaming-hover transition-all duration-300">
                 <img 
                   v-if="article.featured_image"
                   :src="article.featured_image" 
@@ -164,7 +164,7 @@
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div class="absolute top-3 left-3">
-                  <span class="gradient-gaming-alt text-white px-3 py-1 rounded-full text-xs font-bold pulse-glow">
+                  <span class="gradient-gaming-alt text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                     #{{ index + 1 }}
                   </span>
                 </div>
@@ -222,7 +222,7 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               <div class="p-6 bg-white dark:bg-gray-800 rounded-b-xl shadow-lg">
-                <span class="inline-block gradient-gaming text-white px-3 py-1 rounded-full text-sm font-medium mb-3 glow-blue">
+                <span class="inline-block gradient-gaming text-white px-3 py-1 rounded-full text-sm font-medium mb-3">
                   {{ article.category?.name }}
                 </span>
                 <h3 class="text-gray-900 dark:text-white font-bold text-lg line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
@@ -266,7 +266,7 @@
             class="group p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 text-center card-hover-intense fade-in-up"
             :class="`delay-${(index + 1) * 100}`"
           >
-            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 glow-blue"
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                  :style="{ background: `linear-gradient(135deg, ${category.color || '#667eea'}, ${category.color || '#764ba2'})` }">
               <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>

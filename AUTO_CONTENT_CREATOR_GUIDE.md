@@ -24,7 +24,7 @@ Sistem otomatis untuk membuat konten berita gaming dengan SEO dan hashtag yang k
 
 ### Basic Usage
 ```bash
-# Buat 3 artikel (default)
+# Buat 10 artikel (default)
 php artisan news:auto-create-content
 
 # Buat 1 artikel saja
@@ -32,6 +32,9 @@ php artisan news:auto-create-content --limit=1
 
 # Buat 5 artikel
 php artisan news:auto-create-content --limit=5
+
+# Buat 15 artikel
+php artisan news:auto-create-content --limit=15
 ```
 
 ### Output Example

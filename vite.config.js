@@ -23,17 +23,29 @@ export default defineConfig({
         chunkSizeWarningLimit: 1000,
         rollupOptions: {
             output: {
-                manualChunks: {
-                    // Memisahkan chunk untuk mengurangi beban memory
-                    vendor: ['vue', 'vue-router', 'axios'],
-                    charts: ['chart.js'],
-                    editor: ['@tinymce/tinymce-vue'],
+                manualChunks: (id) => {
+                    // Hanya apply manual chunks untuk client build, bukan SSR
+                    if (process.env.VITE_BUILD_SSR) {
+                        return undefined;
+                    }
+                    
+                    if (id.includes('node_modules')) {
+                        if (id.includes('vue') || id.includes('@inertiajs/vue3') || id.includes('axios')) {
+                            return 'vendor';
+                        }
+                        if (id.includes('chart.js')) {
+                            return 'charts';
+                        }
+                        if (id.includes('lodash')) {
+                            return 'lodash';
+                        }
+                    }
                 }
             }
         }
     },
     // Optimasi untuk development
     optimizeDeps: {
-        include: ['vue', 'vue-router', 'axios']
+        include: ['vue', '@inertiajs/vue3', 'axios']
     }
 });

@@ -190,11 +190,6 @@
                   :alt="article.title"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div class="absolute top-3 left-3">
-                  <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-                    {{ article.category?.name }}
-                  </span>
-                </div>
               </div>
               <div class="p-6">
                 <h3 class="text-gray-900 dark:text-white font-bold text-lg line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
