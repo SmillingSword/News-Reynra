@@ -251,6 +251,10 @@ class GamingNewsSourceSeeder extends Seeder
         ];
 
         foreach ($gamingSources as $sourceData) {
+            // Add default values for required fields
+            $sourceData['is_active'] = true;
+            $sourceData['next_scrape_at'] = now();
+            
             NewsSource::updateOrCreate(
                 ['url' => $sourceData['url']],
                 $sourceData
