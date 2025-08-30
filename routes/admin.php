@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GameController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\NewsScraperController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TagController;
@@ -66,4 +67,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     
     // Roles & Permissions
     Route::resource('roles', RoleController::class);
+    
+    // News Scraper
+    Route::prefix('news-scraper')->name('news-scraper.')->group(function () {
+        Route::get('/', [NewsScraperController::class, 'index'])->name('index');
+        Route::get('/stats', [NewsScraperController::class, 'stats'])->name('stats');
+        Route::post('/scrape-all', [NewsScraperController::class, 'scrapeAll'])->name('scrape-all');
+        
+        Route::prefix('sources')->name('sources.')->group(function () {
+            Route::get('/{newsSource}', [NewsScraperController::class, 'show'])->name('show');
+            Route::post('/{newsSource}/scrape', [NewsScraperController::class, 'scrape'])->name('scrape');
+            Route::put('/{newsSource}/config', [NewsScraperController::class, 'updateConfig'])->name('update-config');
+            Route::post('/{newsSource}/test', [NewsScraperController::class, 'testScraping'])->name('test');
+        });
+        
+        Route::prefix('jobs')->name('jobs.')->group(function () {
+            Route::get('/{scrapingJob}', [NewsScraperController::class, 'jobDetails'])->name('details');
+            Route::post('/{scrapingJob}/retry', [NewsScraperController::class, 'retryJob'])->name('retry');
+        });
+    });
 });
