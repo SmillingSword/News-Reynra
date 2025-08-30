@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             CategorySeeder::class,
             TagSeeder::class,
+            GamingNewsSourceSeeder::class, // Add gaming news sources
+            NewsSourceFixSeeder::class, // Fix existing news sources
         ]);
 
         // Create a test admin user
