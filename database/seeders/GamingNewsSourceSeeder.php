@@ -208,6 +208,46 @@ class GamingNewsSourceSeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'name' => 'OneEsport',
+                'url' => 'https://www.oneesports.id',
+                'rss_url' => 'https://www.oneesports.id/feed/',
+                'description' => 'Platform esports terkemuka dengan berita, analisis, dan konten gaming terbaru.',
+                'trust_score' => 8,
+                'type' => 'media',
+                'is_gaming_source' => true,
+                'scraping_frequency' => 45, // 45 minutes
+                'auto_scraping_enabled' => true,
+                'gaming_categories' => ['esports', 'mobile_games', 'pc_games', 'news', 'tournaments'],
+                'scraping_config' => [
+                    'selectors' => [
+                        'article_links' => '.post-title a, .entry-title a, .article-link, .news-item a',
+                        'title' => 'h1.entry-title, h1.post-title, .article-title h1, .post-header h1',
+                        'content' => '.entry-content, .post-content, .article-body, .content-area',
+                        'excerpt' => '.entry-excerpt, .post-excerpt, .article-excerpt, .summary',
+                        'image' => '.featured-image img, .post-thumbnail img, .article-image img, .wp-post-image',
+                        'date' => '.entry-date, .post-date, .published-date, time.entry-date',
+                        'author' => '.author-name, .post-author, .byline, .entry-author',
+                    ],
+                    'filters' => [
+                        'min_content_length' => 300,
+                        'exclude_patterns' => ['iklan', 'advertisement', 'sponsored', 'promosi', 'ads'],
+                        'required_keywords' => ['esport', 'gaming', 'mobile legends', 'valorant', 'dota', 'pubg', 'free fire', 'tournament', 'championship'],
+                    ],
+                    'limits' => [
+                        'max_articles_per_scrape' => 15,
+                        'request_delay' => 2,
+                    ],
+                ],
+                'content_filters' => [
+                    'min_word_count' => 150,
+                    'exclude_categories' => ['advertisement', 'sponsored', 'promosi'],
+                ],
+                'keyword_filters' => [
+                    'include' => ['esports', 'mobile legends', 'valorant', 'dota 2', 'pubg mobile', 'free fire', 'tournament', 'championship', 'team', 'player', 'gaming'],
+                    'exclude' => ['judi', 'betting', 'casino', 'slot'],
+                ],
+            ],
         ];
 
         foreach ($gamingSources as $sourceData) {
