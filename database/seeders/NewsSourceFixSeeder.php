@@ -36,18 +36,6 @@ class NewsSourceFixSeeder extends Seeder
                 $needsUpdate = true;
             }
             
-            // Set next_scrape_at if null
-            if (is_null($source->next_scrape_at)) {
-                $updates['next_scrape_at'] = now();
-                $needsUpdate = true;
-            }
-            
-            // Set auto_scraping_enabled if not set for gaming sources
-            if ($source->is_gaming_source && !$source->auto_scraping_enabled) {
-                $updates['auto_scraping_enabled'] = true;
-                $needsUpdate = true;
-            }
-            
             if ($needsUpdate) {
                 $source->update($updates);
                 $slug = isset($updates['slug']) ? $updates['slug'] : $source->slug;
@@ -62,11 +50,11 @@ class NewsSourceFixSeeder extends Seeder
             $this->command->info("✅ All news sources are already properly configured!");
         }
         
-        // Show summary of gaming sources
-        $gamingSources = NewsSource::gaming()->active()->get(['name', 'slug', 'trust_score']);
+        // Show summary of active sources
+        $activeSources = NewsSource::where('is_active', true)->get(['name', 'slug', 'trust_score']);
         
-        $this->command->info('📊 Active Gaming News Sources:');
-        foreach ($gamingSources as $source) {
+        $this->command->info('📊 Active News Sources:');
+        foreach ($activeSources as $source) {
             $this->command->line("  • {$source->name} (slug: {$source->slug}, trust: {$source->trust_score})");
         }
     }
